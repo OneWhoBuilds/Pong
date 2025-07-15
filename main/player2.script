@@ -1,0 +1,89 @@
+local player = false
+local pos
+local velocity = vmath.vector3(0,0,0)
+local BASEVEL = 125
+local moving = { value = nil }
+
+function init(self)
+	msg.post("#", "acquire_input_focus")
+	pos = go.get_position()
+end
+
+function update(self, dt)
+	if player then
+		pos.y = go.get_position().y + velocity.y * dt
+		go.set_position(pos)
+		if moving.value == false then
+			velocity.y = 0
+		end
+	else
+		if go.get_position().y == go.get_position("ball").y then
+			velocity.y = 0
+		else
+			local dir
+
+			local current_position = go.get_position().y
+			local intended_position = go.get_position("ball").y
+			local distance = math.floor(intended_position - current_position)
+
+			if distance < 0 then
+				dir = -1
+			else
+				dir = 1
+			end
+
+			velocity.y = dir * BASEVEL * dt
+			
+			--moving.value = true
+			pos.y = pos.y + velocity.y
+			go.set_position(pos)
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("collision_response") then
+		if message.group == hash("wall") then
+			velocity.y = 0
+			
+			moving.value = false
+		end
+	end
+
+	if message_id == hash("serve") then
+		moving.value = nil
+		moving.direction = nil
+	end
+	
+	if message_id == hash("2nd_player") then
+		player = true
+	elseif message_id == hash("player") then
+		player = false
+	end
+end
+
+function on_input(self, action_id, action)
+	if player then
+		local direction
+		if action_id == hash("up2") then
+			if action.pressed then
+				direction = 1
+				velocity.y = BASEVEL * direction
+				moving.value = true
+
+			elseif action.released then
+				moving.value = false
+			end
+
+		elseif action_id == hash("down2") then
+			if action.pressed then
+				direction = -1
+				velocity.y = BASEVEL * direction
+				moving.value = true
+
+			elseif action.released then
+				moving.value = false
+			end
+		end
+	end
+end

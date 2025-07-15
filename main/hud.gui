@@ -1,0 +1,214 @@
+script: "/main/hud.gui_script"
+fonts {
+  name: "always_on_top"
+  font: "/builtins/fonts/debug/always_on_top.font"
+}
+fonts {
+  name: "default"
+  font: "/builtins/fonts/default.font"
+}
+nodes {
+  position {
+    y: 640.0
+  }
+  scale {
+    x: 4.798322
+  }
+  size {
+    x: 200.0
+    y: 64.0
+  }
+  type: TYPE_BOX
+  id: "box"
+  pivot: PIVOT_NW
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    y: 640.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "P1: "
+  font: "always_on_top"
+  id: "text"
+  pivot: PIVOT_NW
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 760.0
+    y: 640.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "P2: "
+  font: "always_on_top"
+  id: "text1"
+  pivot: PIVOT_NW
+  inherit_alpha: true
+}
+nodes {
+  size {
+    x: 200.0
+    y: 64.0
+  }
+  type: TYPE_BOX
+  id: "box1"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  visible: false
+}
+nodes {
+  position {
+    x: 535.0
+    y: 32.0
+    z: 1.0
+  }
+  size {
+    x: 100.0
+    y: 64.0
+  }
+  type: TYPE_BOX
+  id: "two"
+  parent: "box1"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "2 Player\n"
+  ""
+  font: "default"
+  id: "text2"
+  parent: "two"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 425.0
+    y: 32.0
+    z: 1.0
+  }
+  size {
+    x: 100.0
+    y: 64.0
+  }
+  type: TYPE_BOX
+  id: "one"
+  parent: "box1"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "1 Player\n"
+  ""
+  font: "default"
+  id: "text3"
+  parent: "one"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 464.0
+    y: 341.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  id: "win"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "Player 1 Wins\n"
+  "Player 2 Loses"
+  font: "default"
+  id: "text4"
+  parent: "win"
+  inherit_alpha: true
+}
+nodes {
+  position {
+    x: 464.0
+    y: 341.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  type: TYPE_BOX
+  id: "lose"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+  enabled: false
+}
+nodes {
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.0
+    y: 0.0
+    z: 0.0
+  }
+  type: TYPE_TEXT
+  text: "Player 2 Wins\n"
+  "Player 1 Loses"
+  font: "default"
+  id: "text5"
+  parent: "lose"
+  inherit_alpha: true
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

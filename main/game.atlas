@@ -1,0 +1,10 @@
+images {
+  image: "/main/bar.png"
+}
+images {
+  image: "/main/ball.png"
+}
+images {
+  image: "/main/p2.png"
+}
+extrude_borders: 2

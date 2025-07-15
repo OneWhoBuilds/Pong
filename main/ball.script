@@ -1,0 +1,89 @@
+local pos = vmath.vector3(0,0,0)
+local velocity
+local BASEVEL = 100
+local start
+local streak = 0 --doesn't need to be tracked unless keeping volley score
+local score_right = 0
+local score_left = 0
+local MIN = -600 --minimum velocity ball may reach
+local MAX = 600 -- maximum velocity ball may reach
+
+-- Position ball at center and give it a random 2D velocity
+local function serve()
+	--resets field
+	go.set_position(start)
+	go.set_position(vmath.vector3(go.get_position("player").x, start.y, 0), "player")
+	go.set_position(vmath.vector3(go.get_position("player2").x, start.y, 0), "player2")
+	msg.post("player2#player2", "serve")
+	
+	-- Choose a random small angle around horizontal
+	local angle = (math.random() * math.pi / 4) - (math.pi / 8)
+	local dir   = (math.random() < 0.5) and -1 or 1
+
+	velocity.x = math.cos(angle) * dir * BASEVEL
+	velocity.y = math.sin(angle) * BASEVEL
+end
+
+local function bounce_arena()
+	velocity.y = velocity.y * -1
+end
+
+local function bounce()--bounces ball in opposite direction
+	velocity.x = velocity.x * -1
+	velocity.y = velocity.y * -1
+
+	if velocity.x < 0 then
+		velocity.x = velocity.x - BASEVEL
+	else
+		velocity.x = velocity.x + BASEVEL
+	end
+
+	if velocity.y < 0 then
+		velocity.y = velocity.y - BASEVEL
+	else
+		velocity.y = velocity.y + BASEVEL
+	end
+
+	velocity = vmath.clamp(velocity, MIN, MAX)
+end
+
+function init(self)
+	math.randomseed(os.time())
+	velocity = vmath.vector3(0,0,0)
+	start = go.get_position()
+end
+
+function update(self, dt)
+	if score_left >= 11 and score_left >= score_right + 2 or score_right >= 11 and score_right >= score_left + 2 then
+		print("winner exists")
+		velocity = vmath.vector3(0,0,0)
+		go.set_position(start)
+		msg.post("hud#hud", "winner", {score_left = score_left, score_right = score_right} )
+	end
+	pos = go.get_position() + velocity * dt
+	go.set_position(pos)
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("start") then
+		serve()
+		print(sender)
+	end
+	if message_id == hash("collision_response") then
+		if message.group == hash("player1") or message.group == hash("player2") then
+			bounce()
+		elseif message.group == hash("wall") then
+			bounce_arena()
+		elseif message.group == hash("point") then
+			print("Velocity ".. velocity.x)
+			if velocity.x < 0 then --vel negative == point right
+				score_right = score_right + 1
+				msg.post("hud#hud", "update_score", { value = true, score = score_right })
+			else
+				score_left = score_left + 1
+				msg.post("hud#hud", "update_score", {value = false, score = score_left })
+			end
+			serve()
+		end
+	end
+end

@@ -1,0 +1,11 @@
+tile_set: "/main/background.tilesource"
+layers {
+  id: "layer1"
+  z: 0.0
+  cell {
+    x: 0
+    y: 0
+    tile: 0
+  }
+}
+material: "/builtins/materials/tile_map.material"

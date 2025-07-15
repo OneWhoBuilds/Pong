@@ -1,0 +1,71 @@
+
+function init(self)
+	msg.post("#", "acquire_input_focus")
+end
+
+
+function final(self)
+	-- Add finalization code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function update(self, dt)
+	-- Add update code here
+	-- Learn more: https://defold.com/manuals/script/
+	-- Remove this function if not needed
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("update_score") then
+		if message.value then
+			gui.set_text(gui.get_node(hash("text1")), "P2: " .. message.score)
+		else
+			gui.set_text(gui.get_node(hash("text")), "P1: " .. message.score)
+		end
+	end
+	
+	if  message_id == hash("winner") then
+		if message.score_left > message.score_right then
+			gui.set_enabled(gui.get_node("win"), true)--p1 wins
+		else
+			gui.set_enabled(gui.get_node("lose"), true)--p1 loses
+		end
+	end
+end
+
+local first_click = true
+local flag = true
+local flag2 = true
+
+function on_input(self, action_id, action)
+	if action_id == hash("touch") and action.pressed then
+		if gui.pick_node(gui.get_node("one"), action.x, action.y) and flag2 then
+			gui.set_color(gui.get_node("one"), vmath.vector4(1, 0, 0, 1))
+			gui.set_color(gui.get_node("two"), vmath.vector4(1, 1, 1, 1))
+			msg.post("player2#player2", "player")
+			flag = true
+			flag2 = false
+			if first_click then
+				msg.post("ball#ball", "start")
+				first_click = false
+			end
+		elseif gui.pick_node(gui.get_node("two"), action.x, action.y) and flag then
+			gui.set_color(gui.get_node("two"), vmath.vector4(1, 1, 0, 1))
+			gui.set_color(gui.get_node("one"), vmath.vector4(1, 1, 1, 1))
+			msg.post("player2#player2", "2nd_player") --send message to player2 script saying, there will be two players 
+			flag = false
+			flag2 = true
+			if first_click then
+				msg.post("ball#ball", "start")
+				first_click = false
+			end
+		end
+	end
+end
+
+function on_reload(self)
+	-- Add reload-handling code here
+	-- Learn more: https://defold.com/manuals/hot-reload/
+	-- Remove this function if not needed
+end
