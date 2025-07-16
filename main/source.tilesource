@@ -5,14 +5,25 @@ collision: "/main/tileset.png"
 convex_hulls {
   index: 0
   count: 4
-  collision_group: "point"
+  collision_group: "Goal_Left"
 }
 convex_hulls {
   index: 4
   count: 4
   collision_group: "wall"
 }
-collision_groups: "point"
+convex_hulls {
+  index: 8
+  count: 0
+  collision_group: ""
+}
+convex_hulls {
+  index: 8
+  count: 4
+  collision_group: "Goal_Right"
+}
+collision_groups: "Goal_Left"
+collision_groups: "Goal_Right"
 collision_groups: "wall"
 animations {
   id: "anim"

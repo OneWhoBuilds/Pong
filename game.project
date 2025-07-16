@@ -17,8 +17,13 @@ scale_mode = stretch
 
 [project]
 title = Pong
+developer = Aidan Cox
+publisher = Aidan Cox
 
 [physics]
 debug = 0
 gravity_y = 0.0
+
+[windows]
+app_icon = /main/pong.ico
 

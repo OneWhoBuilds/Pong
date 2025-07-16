@@ -74,15 +74,14 @@ function on_message(self, message_id, message, sender)
 			bounce()
 		elseif message.group == hash("wall") then
 			bounce_arena()
-		elseif message.group == hash("point") then
-			print("Velocity ".. velocity.x)
-			if velocity.x < 0 then --vel negative == point right
+		end
+		if message.group == hash("Goal_Left") then
 				score_right = score_right + 1
 				msg.post("hud#hud", "update_score", { value = true, score = score_right })
-			else
-				score_left = score_left + 1
-				msg.post("hud#hud", "update_score", {value = false, score = score_left })
-			end
+				serve()
+		elseif message.group == hash("Goal_Right") then
+			score_left = score_left + 1
+			msg.post("hud#hud", "update_score", {value = false, score = score_left })
 			serve()
 		end
 	end
