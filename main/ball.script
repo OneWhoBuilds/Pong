@@ -8,6 +8,8 @@ local score_left = 0
 local MIN = -600 --minimum velocity ball may reach
 local MAX = 600 -- maximum velocity ball may reach
 
+local gate_time = 0.20 --adds cool down on when sound can be played to prevent artifacts
+
 -- Position ball at center and give it a random 2D velocity
 local function serve()
 	--resets field
@@ -24,11 +26,23 @@ local function serve()
 	velocity.y = math.sin(angle) * BASEVEL
 end
 
-local function bounce_arena()
+local function play_gated_sound(self)
+	if self.sounds["#bounce"] == nil then
+		--make sure sound stops
+		sound.stop("#bounce")
+		-- Store sound timer in table
+		self.sounds["#bounce"] = gate_time
+		-- Play the sound
+		sound.play("#bounce")
+	end
+end
+
+local function bounce_arena(self)
+	play_gated_sound(self)
 	velocity.y = velocity.y * -1
 end
 
-local function bounce()--bounces ball in opposite direction
+local function bounce(self)--bounces ball in opposite direction
 	velocity.x = velocity.x * -1
 	velocity.y = velocity.y * -1
 
@@ -45,15 +59,24 @@ local function bounce()--bounces ball in opposite direction
 	end
 
 	velocity = vmath.clamp(velocity, MIN, MAX)
+	play_gated_sound(self)
 end
 
 function init(self)
 	math.randomseed(os.time())
 	velocity = vmath.vector3(0,0,0)
 	start = go.get_position()
+	self.sounds = {}
 end
 
 function update(self, dt)
+	for k,_ in pairs(self.sounds) do
+		self.sounds[k] = self.sounds[k] - dt
+		if self.sounds[k] < 0 then
+			self.sounds[k] = nil
+		end
+	end
+	
 	if score_left >= 11 and score_left >= score_right + 2 or score_right >= 11 and score_right >= score_left + 2 then
 		print("winner exists")
 		velocity = vmath.vector3(0,0,0)
@@ -71,9 +94,9 @@ function on_message(self, message_id, message, sender)
 	end
 	if message_id == hash("collision_response") then
 		if message.group == hash("player1") or message.group == hash("player2") then
-			bounce()
+			bounce(self)
 		elseif message.group == hash("wall") then
-			bounce_arena()
+			bounce_arena(self)
 		end
 		if message.group == hash("Goal_Left") then
 				score_right = score_right + 1
